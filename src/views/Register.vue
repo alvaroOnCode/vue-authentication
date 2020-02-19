@@ -7,8 +7,9 @@
             class="md-layout-item md-size-33 md-small-size-66 md-xsmall-size-100 md-medium-size-40 mx-auto"
           >
             <login-card header-color="green">
-              <h4 slot="title" class="card-title" v-if="!submitted">Register</h4>
+              <h4 slot="title" class="card-title" v-if="!submitted && !fail">Register</h4>
               <h4 slot="title" class="card-title" v-else-if="exists">Welcome back!</h4>
+              <h4 slot="title" class="card-title" v-else-if="fail">Ooops!</h4>
               <h4 slot="title" class="card-title" v-else>Almost done</h4>
 
               <!--<md-button
@@ -40,14 +41,20 @@
               <p
                 slot="description"
                 class="description"
-                v-if="submitted && !exists"
+                v-if="submitted && !exists && !fail"
               >Check your email inbox to activate your account.</p>
 
               <p
                 slot="description"
                 class="description"
-                v-else-if="exists"
+                v-else-if="exists && !fail"
               >It seems that you are already registered.</p>
+
+              <p
+                slot="description"
+                class="description"
+                v-else-if="fail"
+              >Something went wrong. Please, try again.</p>
 
               <md-field class="md-form-group" slot="inputs" v-if="!submitted">
                 <md-icon>face</md-icon>
@@ -89,7 +96,7 @@
               <md-button
                 slot="footer"
                 class="md-simple md-success md-lg"
-                v-if="exists"
+                v-if="exists && !fail"
                 @click="onGoLogin"
               >Go to login</md-button>
             </login-card>
@@ -105,11 +112,11 @@ import http from "axios";
 import { LoginCard } from "@/components";
 
 export default {
-  name: "register",
+  name: "register-page",
   components: {
     LoginCard
   },
-  bodyClass: "login-page",
+  bodyClass: "register-page",
   data: () => ({
     username: null,
     firstname: null,
@@ -117,7 +124,8 @@ export default {
     email: null,
     password: null,
     submitted: false,
-    exists: false
+    exists: false,
+    fail: false
   }),
   props: {
     header: {
@@ -148,19 +156,24 @@ export default {
       })
         .then(response => response.data)
         .then(data => {
-          console.log("Register:", data);
-
           localStorage.setItem("token", `JWT ${data.token}`); // Warning! Don't save JWT in localStore
 
-          setTimeout(() => {
+          /*setTimeout(() => {
             this.$router.push({ name: "login" });
-          }, 1250);
+          }, 1250);*/
         })
         .catch(error => {
-          if (typeof error.response.data.message !== "undefined") {
-            if (error.response.data.message.indexOf("already") !== -1) {
+          try {
+            if (
+              error.response.status === 401 &&
+              error.response.statusText === "Unauthorized"
+            ) {
               this.exists = true;
             }
+          } catch (er) {
+            this.fail = true;
+            this.submitted = false;
+            console.error(er);
           }
         });
     },

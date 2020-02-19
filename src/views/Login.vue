@@ -73,6 +73,7 @@ import http from "axios";
 import { LoginCard } from "@/components";
 
 export default {
+  name: "login-page",
   components: {
     LoginCard
   },

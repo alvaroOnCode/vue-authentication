@@ -1,16 +1,20 @@
 import Vue from "vue";
 import Router from "vue-router";
+
 import Index from "./views/Index.vue";
 import Landing from "./views/Landing.vue";
 import Login from "./views/Login.vue";
-import Profile from "./views/Profile.vue";
-import Register from "./views/Register.vue";
 import MainNavbar from "./layout/MainNavbar.vue";
 import MainFooter from "./layout/MainFooter.vue";
+import Profile from "./views/Profile.vue";
+import Register from "./views/Register.vue";
+import Verify from "./views/Verify.vue";
+
+import hooks from "./hooks";
 
 Vue.use(Router);
 
-export default new Router({
+const router = new Router({
   routes: [
     {
       path: "/",
@@ -45,6 +49,9 @@ export default new Router({
       props: {
         header: { colorOnScroll: 400 },
         footer: { backgroundColor: "black" }
+      },
+      meta: {
+        requireAuth: true
       }
     },
     {
@@ -54,6 +61,18 @@ export default new Router({
       props: {
         header: { colorOnScroll: 400 },
         footer: { backgroundColor: "black" }
+      }
+    },
+    {
+      path: "/verify",
+      name: "verify",
+      components: { default: Verify, header: MainNavbar, footer: MainFooter },
+      props: {
+        header: { colorOnScroll: 400 },
+        footer: { backgroundColor: "black" }
+      },
+      meta: {
+        requireAuth: true
       }
     }
   ],
@@ -65,3 +84,7 @@ export default new Router({
     }
   }
 });
+
+hooks(router);
+
+export default router;
