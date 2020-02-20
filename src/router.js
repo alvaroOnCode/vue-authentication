@@ -6,6 +6,7 @@ import Landing from "./views/Landing.vue";
 import Login from "./views/Login.vue";
 import MainNavbar from "./layout/MainNavbar.vue";
 import MainFooter from "./layout/MainFooter.vue";
+import NotFound from "./views/NotFound.vue";
 import Profile from "./views/Profile.vue";
 import Register from "./views/Register.vue";
 import Verify from "./views/Verify.vue";
@@ -43,6 +44,27 @@ const router = new Router({
       }
     },
     {
+      path: "/not-found",
+      name: "not-found",
+      components: { default: NotFound, header: MainNavbar, footer: MainFooter },
+      props: {
+        header: { colorOnScroll: 400 },
+        footer: { backgroundColor: "black" }
+      },
+      meta: {
+        requireAuth: true
+      },
+      children: [
+        {
+          path: "expired",
+          components: { default: NotFound, header: MainNavbar, footer: MainFooter },
+          meta: {
+            expired: true
+          }
+        }
+      ]
+    },
+    {
       path: "/profile",
       name: "profile",
       components: { default: Profile, header: MainNavbar, footer: MainFooter },
@@ -73,7 +95,16 @@ const router = new Router({
       },
       meta: {
         requireAuth: true
-      }
+      },
+      children: [
+        {
+          path: "verified",
+          components: { default: Verify, header: MainNavbar, footer: MainFooter },
+          meta: {
+            verified: true
+          }
+        }
+      ]
     }
   ],
   scrollBehavior: to => {

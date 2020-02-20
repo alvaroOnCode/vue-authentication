@@ -117,9 +117,7 @@ export default {
           }, 1250);
         })
         .catch(error => {
-          if (error.response.data.message.indexOf("already") !== -1) {
-            this.exists = true;
-          }
+          console.error(error);
         });
     }
   }

@@ -157,22 +157,17 @@ export default {
         .then(response => response.data)
         .then(data => {
           localStorage.setItem("token", `JWT ${data.token}`); // Warning! Don't save JWT in localStore
-
-          /*setTimeout(() => {
-            this.$router.push({ name: "login" });
-          }, 1250);*/
         })
         .catch(error => {
+          this.submitted = false;
           try {
-            if (
-              error.response.status === 401 &&
-              error.response.statusText === "Unauthorized"
-            ) {
+            if (error.response.status === 401) {
               this.exists = true;
+            } else if (error.response.status === 500) {
+              this.fail = true;
             }
           } catch (er) {
             this.fail = true;
-            this.submitted = false;
             console.error(er);
           }
         });
