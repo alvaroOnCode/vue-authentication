@@ -5,9 +5,7 @@
         <div class="md-layout">
           <div class="md-layout-item md-size-50 md-small-size-70 md-xsmall-size-100">
             <h1 class="title">Ooops!</h1>
-            <h4>The account has been verified.</h4>
-            <br />
-            <md-button class="md-success md-lg" @click="onGoLogin">Login</md-button>
+            <h4>We could not find it, sorry!</h4>
           </div>
         </div>
       </div>
@@ -18,9 +16,6 @@
 <script>
 export default {
   name: "not-found-page",
-  data: () => ({
-    description: ""
-  }),
   bodyClass: "not-found-page",
   props: {
     header: {
@@ -33,19 +28,6 @@ export default {
       return {
         backgroundImage: `url(${this.header})`
       };
-    }
-  },
-  methods: {
-    onGoLogin() {
-      this.$router.push({ name: "login" });
-    }
-  },
-  mounted() {
-    if (this.$route.matched.some(record => record.meta.expired)) {
-      this.description =
-        "You have been out for a long time. Please, login again.";
-    } else {
-      this.description = "We could not find an account to verify...";
     }
   }
 };

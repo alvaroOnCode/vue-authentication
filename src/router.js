@@ -1,13 +1,15 @@
 import Vue from "vue";
 import Router from "vue-router";
 
+import Expired from "./views/Expired.vue";
 import Index from "./views/Index.vue";
-import Landing from "./views/Landing.vue";
 import Login from "./views/Login.vue";
 import MainNavbar from "./layout/MainNavbar.vue";
 import MainFooter from "./layout/MainFooter.vue";
 import NotFound from "./views/NotFound.vue";
 import Profile from "./views/Profile.vue";
+import RecoverPassword from "./views/RecoverPassword.vue";
+import ResetPassword from "./views/ResetPassword.vue";
 import Register from "./views/Register.vue";
 import Verify from "./views/Verify.vue";
 
@@ -27,9 +29,9 @@ const router = new Router({
       }
     },
     {
-      path: "/landing",
-      name: "landing",
-      components: { default: Landing, header: MainNavbar, footer: MainFooter },
+      path: "/expired",
+      name: "expired",
+      components: { default: Expired, header: MainNavbar, footer: MainFooter },
       props: {
         header: { colorOnScroll: 400 },
         footer: { backgroundColor: "black" }
@@ -44,27 +46,6 @@ const router = new Router({
       }
     },
     {
-      path: "/not-found",
-      name: "not-found",
-      components: { default: NotFound, header: MainNavbar, footer: MainFooter },
-      props: {
-        header: { colorOnScroll: 400 },
-        footer: { backgroundColor: "black" }
-      },
-      meta: {
-        requireAuth: true
-      },
-      children: [
-        {
-          path: "expired",
-          components: { default: NotFound, header: MainNavbar, footer: MainFooter },
-          meta: {
-            expired: true
-          }
-        }
-      ]
-    },
-    {
       path: "/profile",
       name: "profile",
       components: { default: Profile, header: MainNavbar, footer: MainFooter },
@@ -74,6 +55,24 @@ const router = new Router({
       },
       meta: {
         requireAuth: true
+      }
+    },
+    {
+      path: "/recover-password",
+      name: "recover-password",
+      components: { default: RecoverPassword, header: MainNavbar, footer: MainFooter },
+      props: {
+        header: { colorOnScroll: 400 },
+        footer: { backgroundColor: "black" }
+      }
+    },
+    {
+      path: "/reset-password/:rpt",
+      name: "reset-password",
+      components: { default: ResetPassword, header: MainNavbar, footer: MainFooter },
+      props: {
+        header: { colorOnScroll: 400 },
+        footer: { backgroundColor: "black" }
       }
     },
     {
@@ -94,17 +93,17 @@ const router = new Router({
         footer: { backgroundColor: "black" }
       },
       meta: {
-        requireAuth: true
-      },
-      children: [
-        {
-          path: "verified",
-          components: { default: Verify, header: MainNavbar, footer: MainFooter },
-          meta: {
-            verified: true
-          }
-        }
-      ]
+        requireAuth: true,
+        verified: true
+      }
+    },
+    {
+      path: "*",
+      components: { default: NotFound, header: MainNavbar, footer: MainFooter },
+      props: {
+        header: { colorOnScroll: 400 },
+        footer: { backgroundColor: "black" }
+      }
     }
   ],
   scrollBehavior: to => {

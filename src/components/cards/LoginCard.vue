@@ -15,6 +15,10 @@
     <md-card-actions>
       <slot name="footer"></slot>
     </md-card-actions>
+
+    <md-card-content>
+      <slot name="toolbar"></slot>
+    </md-card-content>
   </md-card>
 </template>
 

@@ -99,6 +99,10 @@
                 v-if="exists && !fail"
                 @click="onGoLogin"
               >Go to login</md-button>
+
+              <p slot="toolbar" style="text-align: center;" v-if="!submitted && !exists && !fail">
+                <router-link :to="{ name: 'login' }">Login</router-link>
+              </p>
             </login-card>
           </div>
         </div>
@@ -141,34 +145,66 @@ export default {
     }
   },
   methods: {
+    request(obj) {
+      if (!obj.method || !obj.url) {
+        return;
+      }
+
+      if (!obj.async) {
+        obj.async = false;
+      }
+
+      return new Promise((resolve, reject) => {
+        let xhr = new XMLHttpRequest();
+        xhr.open(obj.method, obj.url, obj.async);
+
+        if (obj.headers) {
+          Object.keys(obj.headers).forEach(key => {
+            xhr.setRequestHeader(key, obj.headers[key]);
+          });
+        }
+
+        xhr.onload = () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            resolve(xhr.response);
+          } else {
+            reject(xhr.statusText);
+          }
+        };
+
+        xhr.onerror = () => reject(xhr.statusText);
+        xhr.send(obj.body);
+      });
+    },
     onRegister() {
       this.submitted = true;
-      return http({
+      this.fail = false;
+
+      this.request({
         method: "POST",
         url: `${process.env.VUE_APP_API}auth/register`,
-        data: {
-          username: this.username,
-          firstName: this.firstname,
-          lastName: this.lastname,
-          email: this.email,
-          password: this.password
-        }
+        async: true,
+        headers: {
+          "Content-type": "application/x-www-form-urlencoded"
+        },
+        body: `username=${this.username}&firstName=${this.firstName}&lastName=${this.lastName}&email=${this.email}&password=${this.password}`
       })
-        .then(response => response.data)
         .then(data => {
-          localStorage.setItem("token", `JWT ${data.token}`); // Warning! Don't save JWT in localStore
+          console.log("Register success!", data);
         })
         .catch(error => {
           this.submitted = false;
+          console.error(error);
+
           try {
             if (error.response.status === 401) {
               this.exists = true;
             } else if (error.response.status === 500) {
               this.fail = true;
             }
-          } catch (er) {
+          } catch (err) {
             this.fail = true;
-            console.error(er);
+            console.error(err);
           }
         });
     },

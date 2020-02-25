@@ -10,32 +10,6 @@
               <h4 slot="title" class="card-title" v-if="notFound || doNotMatch">Ooops!</h4>
               <h4 slot="title" class="card-title" v-else>Login</h4>
 
-              <!--<md-button
-                slot="buttons"
-                href="javascript:void(0)"
-                class="md-just-icon md-simple md-white"
-              >
-                <i class="fab fa-facebook-square"></i>
-              </md-button>
-
-              <md-button
-                slot="buttons"
-                href="javascript:void(0)"
-                class="md-just-icon md-simple md-white"
-              >
-                <i class="fab fa-twitter"></i>
-              </md-button>
-
-              <md-button
-                slot="buttons"
-                href="javascript:void(0)"
-                class="md-just-icon md-simple md-white"
-              >
-                <i class="fab fa-google-plus-g"></i>
-              </md-button>
-
-              <p slot="description" class="description">Or Be Classical</p>-->
-
               <md-field class="md-form-group" slot="inputs">
                 <md-icon>email</md-icon>
                 <label>Email</label>
@@ -54,13 +28,18 @@
                 @click="onLogin"
                 v-if="notFound || doNotMatch"
               >Try again!</md-button>
-              
+
               <md-button
                 slot="footer"
                 class="md-simple md-success md-lg"
                 @click="onLogin"
                 v-else
               >Go!</md-button>
+
+              <p slot="toolbar" style="text-align: center;">
+                <router-link :to="{ name: 'recover-password' }">Forgot password?</router-link> ·
+                <router-link :to="{ name: 'register' }">Create account</router-link>
+              </p>
             </login-card>
           </div>
         </div>
@@ -112,6 +91,7 @@ export default {
         .then(response => response.data)
         .then(data => {
           console.log("Login:", data);
+          localStorage.setItem("token", `JWT ${data.token}`);
 
           setTimeout(() => {
             this.$router.push({ name: "profile" });
