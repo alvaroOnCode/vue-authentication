@@ -22,7 +22,11 @@
                 <md-input v-model="confirmPassword" type="password"></md-input>
               </md-field>
 
-              <md-button slot="footer" class="md-simple md-success md-lg" @click.prevent="onResetPassword">Send</md-button>
+              <md-button
+                slot="footer"
+                class="md-simple md-success md-lg"
+                @click.prevent="onResetPassword"
+              >Send</md-button>
             </login-card>
           </div>
 
@@ -67,15 +71,16 @@ export default {
   },
   methods: {
     onResetPassword() {
-      utils.request({
-        method: "POST",
-        url: `${process.env.VUE_APP_API}auth/reset?token=${this.rpt}`,
-        async: true,
-        headers: {
-          "Content-type": "application/x-www-form-urlencoded"
-        },
-        body: `password=${this.password}&confirmPassword=${this.confirmPassword}`
-      })
+      utils
+        .request({
+          method: "POST",
+          url: `${process.env.VUE_APP_API}auth/reset/${this.rpt}`,
+          async: true,
+          headers: {
+            "Content-type": "application/x-www-form-urlencoded"
+          },
+          body: `password=${this.password}&confirmPassword=${this.confirmPassword}`
+        })
         .then(data => {
           this.isSent = true;
         })

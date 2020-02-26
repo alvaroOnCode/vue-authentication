@@ -16,7 +16,11 @@
                 <md-input v-model="email" type="email"></md-input>
               </md-field>
 
-              <md-button slot="footer" class="md-simple md-success md-lg" @click.prevent="onRecoverPassword">Send</md-button>
+              <md-button
+                slot="footer"
+                class="md-simple md-success md-lg"
+                @click.prevent="onRecoverPassword"
+              >Send</md-button>
             </login-card>
           </div>
 
@@ -59,19 +63,21 @@ export default {
   },
   methods: {
     onRecoverPassword() {
-      utils.request({
-        method: "POST",
-        url: `${process.env.VUE_APP_API}auth/recover`,
-        async: true,
-        headers: {
-          "Content-type": "application/x-www-form-urlencoded"
-        },
-        body: `email=${this.email}`
-      })
+      utils
+        .request({
+          method: "POST",
+          url: `${process.env.VUE_APP_API}auth/recover`,
+          async: true,
+          headers: {
+            "Content-type": "application/x-www-form-urlencoded"
+          },
+          body: `email=${this.email}`
+        })
         .then(data => {
           this.setIsSent(true);
         })
         .catch(error => {
+          console.log("RecoverPassword KO!", error);
           this.setIsSent(false);
         });
     },

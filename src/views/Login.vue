@@ -37,7 +37,7 @@
               >Go!</md-button>
 
               <p slot="toolbar" style="text-align: center;">
-                <router-link :to="{ name: 'recover-password' }">Forgot password?</router-link> ·
+                <router-link :to="{ name: 'recover-password' }">Forgot password?</router-link>·
                 <router-link :to="{ name: 'register' }">Create account</router-link>
               </p>
             </login-card>
@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import http from "axios";
+import utils from "../utils.js";
 import { LoginCard } from "@/components";
 
 export default {
@@ -80,25 +80,26 @@ export default {
   },
   methods: {
     onLogin() {
-      return http({
-        method: "POST",
-        url: `${process.env.VUE_APP_API}auth/login`,
-        data: {
-          email: this.email,
-          password: this.password
-        }
-      })
-        .then(response => response.data)
+      utils
+        .request({
+          method: "POST",
+          url: `${process.env.VUE_APP_API}auth/login`,
+          async: true,
+          headers: {
+            "Content-type": "application/x-www-form-urlencoded"
+          },
+          body: `email=${this.email}&password=${this.password}`
+        })
         .then(data => {
-          console.log("Login:", data);
           localStorage.setItem("token", `JWT ${data.token}`);
 
           setTimeout(() => {
             this.$router.push({ name: "profile" });
-          }, 1250);
+          }, 2500);
         })
         .catch(error => {
-          console.error(error);
+          console.log("Login KO!", error);
+          this.isSent = false;
         });
     }
   }

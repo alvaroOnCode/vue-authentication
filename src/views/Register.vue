@@ -86,7 +86,7 @@
 </template>
 
 <script>
-import http from "axios";
+import utils from "../utils.js";
 import { LoginCard } from "@/components";
 
 export default {
@@ -119,56 +119,26 @@ export default {
     }
   },
   methods: {
-    request(obj) {
-      if (!obj.method || !obj.url) {
-        return;
-      }
-
-      if (!obj.async) {
-        obj.async = false;
-      }
-
-      return new Promise((resolve, reject) => {
-        let xhr = new XMLHttpRequest();
-        xhr.open(obj.method, obj.url, obj.async);
-
-        if (obj.headers) {
-          Object.keys(obj.headers).forEach(key => {
-            xhr.setRequestHeader(key, obj.headers[key]);
-          });
-        }
-
-        xhr.onload = () => {
-          if (xhr.status >= 200 && xhr.status < 300) {
-            resolve(xhr.response);
-          } else {
-            reject(xhr.statusText);
-          }
-        };
-
-        xhr.onerror = () => reject(xhr.statusText);
-        xhr.send(obj.body);
-      });
-    },
     onRegister() {
       this.submitted = true;
       this.fail = false;
 
-      this.request({
-        method: "POST",
-        url: `${process.env.VUE_APP_API}auth/register`,
-        async: true,
-        headers: {
-          "Content-type": "application/x-www-form-urlencoded"
-        },
-        body: `username=${this.username}&firstName=${this.firstname}&lastName=${this.lastname}&email=${this.email}&password=${this.password}`
-      })
+      utils
+        .request({
+          method: "POST",
+          url: `${process.env.VUE_APP_API}auth/register`,
+          async: true,
+          headers: {
+            "Content-type": "application/x-www-form-urlencoded"
+          },
+          body: `username=${this.username}&firstName=${this.firstname}&lastName=${this.lastname}&email=${this.email}&password=${this.password}`
+        })
         .then(data => {
           console.log("Register success!", data);
         })
         .catch(error => {
+          console.error("Register KO!", error);
           this.submitted = false;
-          console.error(error);
 
           try {
             if (error.response.status === 401) {
@@ -177,8 +147,8 @@ export default {
               this.fail = true;
             }
           } catch (err) {
-            this.fail = true;
             console.error(err);
+            this.fail = true;
           }
         });
     },
