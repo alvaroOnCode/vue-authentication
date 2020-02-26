@@ -27,7 +27,7 @@ const utils = {
             };
 
             xhr.onerror = () => reject(xhr.statusText);
-            xhr.send(obj.body);
+            obj.body ? xhr.send(obj.body) : xhr.send();
         });
     }
 }

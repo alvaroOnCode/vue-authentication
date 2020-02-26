@@ -12,32 +12,6 @@
               <h4 slot="title" class="card-title" v-else-if="fail">Ooops!</h4>
               <h4 slot="title" class="card-title" v-else>Almost done</h4>
 
-              <!--<md-button
-                slot="buttons"
-                href="javascript:void(0)"
-                class="md-just-icon md-simple md-white"
-              >
-                <i class="fab fa-facebook-square"></i>
-              </md-button>
-
-              <md-button
-                slot="buttons"
-                href="javascript:void(0)"
-                class="md-just-icon md-simple md-white"
-              >
-                <i class="fab fa-twitter"></i>
-              </md-button>
-
-              <md-button
-                slot="buttons"
-                href="javascript:void(0)"
-                class="md-just-icon md-simple md-white"
-              >
-                <i class="fab fa-google-plus-g"></i>
-              </md-button>
-
-              <p slot="description" class="description">Or Be Classical</p>-->
-
               <p
                 slot="description"
                 class="description"
@@ -187,7 +161,7 @@ export default {
         headers: {
           "Content-type": "application/x-www-form-urlencoded"
         },
-        body: `username=${this.username}&firstName=${this.firstName}&lastName=${this.lastName}&email=${this.email}&password=${this.password}`
+        body: `username=${this.username}&firstName=${this.firstname}&lastName=${this.lastname}&email=${this.email}&password=${this.password}`
       })
         .then(data => {
           console.log("Register success!", data);
