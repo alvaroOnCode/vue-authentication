@@ -7,7 +7,7 @@
             class="md-layout-item md-size-33 md-small-size-66 md-xsmall-size-100 md-medium-size-40 mx-auto"
           >
             <login-card header-color="green">
-              <h4 slot="title" class="card-title" v-if="notFound || doNotMatch">Ooops!</h4>
+              <h4 slot="title" class="card-title" v-if="exists || fail">Ooops!</h4>
               <h4 slot="title" class="card-title" v-else>Login</h4>
 
               <md-field class="md-form-group" slot="inputs">
@@ -26,7 +26,7 @@
                 slot="footer"
                 class="md-simple md-success md-lg"
                 @click="onLogin"
-                v-if="notFound || doNotMatch"
+                v-if="exists || fail"
               >Try again!</md-button>
 
               <md-button
@@ -37,7 +37,8 @@
               >Go!</md-button>
 
               <p slot="toolbar" style="text-align: center;">
-                <router-link :to="{ name: 'recover-password' }">Forgot password?</router-link>·
+                <router-link :to="{ name: 'recover-password' }">Forgot password?</router-link>
+                <span> or </span>
                 <router-link :to="{ name: 'register' }">Create account</router-link>
               </p>
             </login-card>
@@ -59,11 +60,10 @@ export default {
   },
   bodyClass: "login-page",
   data: () => ({
-    firstname: null,
     email: null,
     password: null,
-    notFound: false,
-    doNotMatch: false
+    exists: false,
+    fail: false
   }),
   props: {
     header: {
@@ -80,6 +80,9 @@ export default {
   },
   methods: {
     onLogin() {
+      this.exists = false;
+      this.fail = false;
+
       utils
         .request({
           method: "POST",
@@ -99,7 +102,17 @@ export default {
         })
         .catch(error => {
           console.log("Login KO!", error);
-          this.isSent = false;
+
+          try {
+            if (error.response.status === 401) {
+              this.exists = true;
+            } else if (error.response.status === 500) {
+              this.fail = true;
+            }
+          } catch (err) {
+            console.error(err);
+            this.fail = true;
+          }
         });
     }
   }

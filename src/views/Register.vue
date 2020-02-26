@@ -121,6 +121,7 @@ export default {
   methods: {
     onRegister() {
       this.submitted = true;
+      this.exists = false;
       this.fail = false;
 
       utils

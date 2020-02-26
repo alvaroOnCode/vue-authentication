@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <parallax class="section page-header header-filter" :style="headerStyle">
+    <div class="section page-header header-filter" :style="headerStyle">
       <div class="container">
         <div class="md-layout">
           <login-card header-color="green" v-if="!isSent">
@@ -21,7 +21,7 @@
           </div>
         </div>
       </div>
-    </parallax>
+    </div>
   </div>
 </template>
 
